@@ -46,23 +46,33 @@ fun printGrid(grid: List<MutableList<Char>>){
 }
 
 fun main() {
-    val grid = getGrid()
+    val grid = List(3) { MutableList(3) {'_'} }
     printGrid(grid)
-    var moveMade = false
-    while(!moveMade) {
-        try {
-            val (x, y) = readln().split(" ").map { it.toInt() }
-            if (x !in 1..3 || y !in 1..3) {
-                println("Coordinates should be from 1 to 3!")
-            } else if (grid[x - 1][y - 1] != '_') {
-                println("This cell is occupied! Choose another one!")
-            } else {
-                grid[x - 1][y - 1] = 'X'
-                moveMade = true
+    var gameOver = false
+    var currentPlayerChar = 'X'
+    while(!gameOver) {
+        var moveMade = false
+        while (!moveMade) {
+            try {
+                val (x, y) = readln().split(" ").map { it.toInt() }
+                if (x !in 1..3 || y !in 1..3) {
+                    println("Coordinates should be from 1 to 3!")
+                } else if (grid[x - 1][y - 1] != '_') {
+                    println("This cell is occupied! Choose another one!")
+                } else {
+                    grid[x - 1][y - 1] = currentPlayerChar
+                    currentPlayerChar = if (currentPlayerChar == 'X') 'O' else 'X'
+                    moveMade = true
+                }
+            } catch (e: NumberFormatException) {
+                println("You should enter numbers")
             }
-        } catch (e: NumberFormatException) {
-            println("You should enter numbers")
+        }
+        printGrid(grid)
+        val state = checkGrid(grid)
+        if (state != "Game not finished") {
+            gameOver = true
+            println(state)
         }
     }
-    printGrid(grid)
 }
