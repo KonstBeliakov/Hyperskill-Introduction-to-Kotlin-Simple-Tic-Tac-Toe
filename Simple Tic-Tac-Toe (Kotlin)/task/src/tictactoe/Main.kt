@@ -36,7 +36,11 @@ fun checkGrid(grid: List<MutableList<Char>>): String {
 fun printGrid(grid: List<MutableList<Char>>){
     println("---------")
     for (line in grid) {
-        println("| " + line.joinToString(" ") + " |")
+        print("| ")
+        for(cell in line){
+            print(if (cell != '_') "$cell " else "  ")
+        }
+        println("|")
     }
     println("---------")
 }
@@ -44,6 +48,21 @@ fun printGrid(grid: List<MutableList<Char>>){
 fun main() {
     val grid = getGrid()
     printGrid(grid)
-    val state = checkGrid(grid)
-    println(state)
+    var moveMade = false
+    while(!moveMade) {
+        try {
+            val (x, y) = readln().split(" ").map { it.toInt() }
+            if (x !in 1..3 || y !in 1..3) {
+                println("Coordinates should be from 1 to 3!")
+            } else if (grid[x - 1][y - 1] != '_') {
+                println("This cell is occupied! Choose another one!")
+            } else {
+                grid[x - 1][y - 1] = 'X'
+                moveMade = true
+            }
+        } catch (e: NumberFormatException) {
+            println("You should enter numbers")
+        }
+    }
+    printGrid(grid)
 }
